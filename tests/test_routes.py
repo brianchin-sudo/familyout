@@ -101,3 +101,33 @@ def test_exception_renders_error_page(client):
         response = client.get("/search?location=Austin+TX")
         assert response.status_code == 500
         assert b"wrong" in response.data.lower()
+
+
+# /event detail route
+def test_event_detail_returns_200(client):
+    response = client.get(
+        "/event?title=Kite+Festival&link=https://example.com&when=Sat+May+18"
+        "&address=Zilker+Park||Austin+TX&description=Fun+for+all"
+    )
+    assert response.status_code == 200
+
+
+def test_event_detail_shows_title(client):
+    response = client.get("/event?title=Kite+Festival&link=https://example.com&when=Sat")
+    assert b"Kite Festival" in response.data
+
+
+def test_event_detail_has_back_link(client):
+    response = client.get(
+        "/event?title=X&link=https://example.com&when=Sat"
+        "&back_url=/search?location=Austin+TX"
+    )
+    assert b"Back to results" in response.data
+    assert b"/search" in response.data
+
+
+def test_event_detail_renders_without_optional_fields(client):
+    # thumbnail, description, cost all absent — should not crash
+    response = client.get("/event?title=Minimal+Event&link=https://example.com&when=Sun")
+    assert response.status_code == 200
+    assert b"Minimal Event" in response.data

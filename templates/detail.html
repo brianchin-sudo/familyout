@@ -2,7 +2,7 @@
 {% block title %}{{ event.title }}{% endblock %}
 {% block content %}
 <div class="detail-header">
-  <a href="javascript:history.back()" class="link-back">&#8592; Back to results</a>
+  <a href="{{ back_url }}" class="link-back">&#8592; Back to results</a>
   <h1>{{ event.title }}</h1>
 </div>
 

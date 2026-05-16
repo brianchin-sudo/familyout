@@ -27,7 +27,15 @@
             {% endif %}
           </div>
           <h2 class="event-title">
-            <a href="{{ event.link }}" target="_blank" rel="noopener">{{ event.title }}</a>
+            <a href="{{ url_for('main.event_detail',
+                title=event.title,
+                link=event.link,
+                thumbnail=event.thumbnail or '',
+                when=event.date.when,
+                address='||'.join(event.address),
+                description=event.get('description', ''),
+                cost=event.ticket_info[0].source if event.ticket_info else '',
+                back_url=request.url) }}">{{ event.title }}</a>
           </h2>
           <p class="event-when">&#128197; {{ event.date.when }}</p>
           <p class="event-venue">&#128205; {{ event.address | join(', ') }}</p>

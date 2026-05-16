@@ -32,3 +32,10 @@ def test_results_card_contains_venue(client, mock_serpapi_response):
     with patch("app.routes.search_events", return_value=mock_serpapi_response["events_results"]):
         response = client.get("/search?location=Austin+TX")
     assert b"Zilker Park" in response.data
+
+
+def test_results_card_links_to_internal_detail_route(client, mock_serpapi_response):
+    with patch("app.routes.search_events", return_value=mock_serpapi_response["events_results"]):
+        response = client.get("/search?location=Austin+TX")
+    html = response.data.decode()
+    assert 'href="/event?' in html

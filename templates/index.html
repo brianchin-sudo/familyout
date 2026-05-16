@@ -13,7 +13,7 @@
         required
         autocomplete="off"
       >
-      <button class="btn-search" type="submit">Search</button>
+      <button class="btn-search" type="submit" id="btn-search">Search</button>
     </div>
     <div class="filter-row">
       <select name="date">
@@ -37,4 +37,12 @@
     </div>
   </form>
 </div>
+<script>
+  document.querySelector('.search-form').addEventListener('submit', function () {
+    var btn = document.getElementById('btn-search');
+    btn.textContent = 'Searching…';
+    btn.classList.add('btn-search--loading');
+    btn.disabled = true;
+  });
+</script>
 {% endblock %}

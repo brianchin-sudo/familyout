@@ -54,3 +54,18 @@ def search():
         category=category,
         kids_only=kids_only,
     )
+
+
+@bp.route("/event")
+def event_detail():
+    event = {
+        "title":       request.args.get("title", ""),
+        "link":        request.args.get("link", ""),
+        "thumbnail":   request.args.get("thumbnail") or None,
+        "date":        {"when": request.args.get("when", "")},
+        "address":     request.args.get("address", "").split("||"),
+        "description": request.args.get("description", ""),
+        "ticket_info": [{"source": request.args.get("cost", "")}] if request.args.get("cost") else [],
+    }
+    back_url = request.args.get("back_url", url_for("main.index"))
+    return render_template("detail.html", event=event, back_url=back_url)
