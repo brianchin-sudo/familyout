@@ -1,4 +1,4 @@
-# Family Events Finder
+# FamilyOut
 
 A Python/Flask web app that surfaces family-friendly events using the [SerpAPI Google Events engine](https://serpapi.com/google-events-api). Search by location and date, filter by category, and toggle a "Kids Only" mode to see only explicitly child-friendly events.
 
