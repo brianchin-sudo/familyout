@@ -8,7 +8,12 @@ load_dotenv()
 
 def create_app():
     app = Flask(__name__, template_folder="../templates", static_folder="../static")
-    app.secret_key = os.environ.get("FLASK_SECRET_KEY", "dev-secret-key")
+    secret_key = os.environ.get("FLASK_SECRET_KEY")
+    if not secret_key:
+        if os.environ.get("FLASK_ENV") == "production":
+            raise RuntimeError("FLASK_SECRET_KEY must be set in production")
+        secret_key = "dev-secret-key"
+    app.secret_key = secret_key
 
     if not os.environ.get("SERPAPI_KEY"):
         logging.warning(

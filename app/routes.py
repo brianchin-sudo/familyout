@@ -28,7 +28,10 @@ def search():
     date_chip = DATE_CHIP_MAP.get(date_val)
     category = request.args.get("category", "all")
     kids_only = request.args.get("kids_only", "") == "1"
-    page = max(1, int(request.args.get("page", 1)))
+    try:
+        page = max(1, int(request.args.get("page", 1)))
+    except (ValueError, TypeError):
+        page = 1
 
     try:
         events = search_events(
@@ -74,5 +77,7 @@ def event_detail():
         "description": request.args.get("description", ""),
         "ticket_info": [{"source": request.args.get("cost", "")}] if request.args.get("cost") else [],
     }
-    back_url = request.args.get("back_url", url_for("main.index"))
+    raw_back = request.args.get("back_url", "")
+    # Only allow relative paths to prevent open-redirect and javascript: XSS
+    back_url = raw_back if raw_back.startswith("/") else url_for("main.index")
     return render_template("detail.html", event=event, back_url=back_url)
