@@ -1,12 +1,20 @@
 import pytest
-from app import create_app
+from app import create_app, cache
 
 
 @pytest.fixture
 def app():
     app = create_app()
     app.config["TESTING"] = True
-    yield app
+    app.config["CACHE_TYPE"] = "SimpleCache"
+    return app
+
+
+@pytest.fixture(autouse=True)
+def app_ctx(app):
+    with app.app_context():
+        cache.clear()
+        yield
 
 
 @pytest.fixture

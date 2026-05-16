@@ -1,9 +1,12 @@
 import os
 import logging
 from flask import Flask
+from flask_caching import Cache
 from dotenv import load_dotenv
 
 load_dotenv()
+
+cache = Cache()
 
 
 def create_app():
@@ -14,6 +17,10 @@ def create_app():
             raise RuntimeError("FLASK_SECRET_KEY must be set in production")
         secret_key = "dev-secret-key"
     app.secret_key = secret_key
+
+    app.config["CACHE_TYPE"] = "SimpleCache"
+    app.config["CACHE_DEFAULT_TIMEOUT"] = 900  # 15 minutes
+    cache.init_app(app)
 
     if not os.environ.get("SERPAPI_KEY"):
         logging.warning(

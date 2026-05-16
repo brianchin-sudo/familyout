@@ -1,10 +1,12 @@
 import os
 import requests
+from app import cache
 
 
 SERPAPI_URL = "https://serpapi.com/search"
 
 
+@cache.memoize(timeout=900)
 def search_events(location, query="family friendly", date_chip=None, page=1, category=None):
     api_key = os.environ.get("SERPAPI_KEY", "")
     if not api_key:
@@ -35,6 +37,7 @@ def search_events(location, query="family friendly", date_chip=None, page=1, cat
         return []
 
 
+@cache.memoize(timeout=900)
 def search_places(location, query="family friendly things to do"):
     api_key = os.environ.get("SERPAPI_KEY", "")
     if not api_key:
