@@ -1,9 +1,9 @@
-"""Tests for SERP-001/002, SERP-003/004, SERP-005/006, SERP-012/013."""
+"""Tests for SERP-001/002, SERP-003/004, SERP-005/006, SERP-012/013, and search_places."""
 import requests as req_lib
 import responses
 from urllib.parse import urlparse, parse_qs
 
-from app.serpapi_client import search_events
+from app.serpapi_client import search_events, search_places
 
 SEARCH_URL = "https://serpapi.com/search"
 
@@ -76,3 +76,40 @@ def test_returns_empty_list_on_network_error():
         body=req_lib.exceptions.ConnectionError("network error"),
     )
     assert search_events(location="Denver CO") == []
+
+
+# search_places — google_local engine
+@responses.activate
+def test_search_places_uses_google_local_engine():
+    responses.add(responses.GET, SEARCH_URL, json={"local_results": []}, status=200)
+    search_places(location="Denver CO")
+    params = parse_qs(urlparse(responses.calls[0].request.url).query)
+    assert params["engine"][0] == "google_local"
+
+
+@responses.activate
+def test_search_places_query_contains_family_friendly():
+    responses.add(responses.GET, SEARCH_URL, json={"local_results": []}, status=200)
+    search_places(location="Denver CO")
+    params = parse_qs(urlparse(responses.calls[0].request.url).query)
+    assert "family friendly" in params["q"][0]
+
+
+@responses.activate
+def test_search_places_returns_local_results():
+    payload = {"local_results": [{"title": "Lincoln Park Zoo", "type": "Zoo"}]}
+    responses.add(responses.GET, SEARCH_URL, json=payload, status=200)
+    results = search_places(location="Chicago IL")
+    assert len(results) == 1
+    assert results[0]["title"] == "Lincoln Park Zoo"
+
+
+@responses.activate
+def test_search_places_returns_empty_on_error():
+    responses.add(responses.GET, SEARCH_URL, status=500)
+    assert search_places(location="Denver CO") == []
+
+
+def test_search_places_returns_empty_without_api_key(monkeypatch):
+    monkeypatch.delenv("SERPAPI_KEY", raising=False)
+    assert search_places(location="Denver CO") == []

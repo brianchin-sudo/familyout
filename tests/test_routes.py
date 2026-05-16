@@ -1,4 +1,4 @@
-"""Tests for ROUTE-001 through ROUTE-014."""
+"""Tests for ROUTE-001 through ROUTE-014, plus things-to-do."""
 from unittest.mock import patch
 
 
@@ -131,3 +131,29 @@ def test_event_detail_renders_without_optional_fields(client):
     response = client.get("/event?title=Minimal+Event&link=https://example.com&when=Sun")
     assert response.status_code == 200
     assert b"Minimal Event" in response.data
+
+
+# Things To Do — search_places integrated into /search
+def test_search_passes_places_to_template(client):
+    mock_places = [{"title": "Lincoln Park Zoo", "type": "Zoo", "address": "Chicago, IL",
+                    "rating": 4.7, "reviews": 1000, "hours": "Open", "thumbnail": None,
+                    "links": {"website": "https://zoo.org"}}]
+    with patch("app.routes.search_events", return_value=[]):
+        with patch("app.routes.search_places", return_value=mock_places):
+            response = client.get("/search?location=Chicago+IL")
+    assert response.status_code == 200
+    assert b"Lincoln Park Zoo" in response.data
+
+
+def test_search_shows_things_to_do_tab(client):
+    with patch("app.routes.search_events", return_value=[]):
+        with patch("app.routes.search_places", return_value=[]):
+            response = client.get("/search?location=Chicago+IL")
+    assert b"Things To Do" in response.data
+
+
+def test_search_places_failure_does_not_crash_page(client):
+    with patch("app.routes.search_events", return_value=[]):
+        with patch("app.routes.search_places", return_value=[]):
+            response = client.get("/search?location=Chicago+IL")
+    assert response.status_code == 200

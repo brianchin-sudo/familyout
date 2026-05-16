@@ -130,6 +130,29 @@ a:hover { text-decoration: underline; }
   cursor: pointer;
 }
 
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 2px solid #dee2e6;
+  margin-bottom: 1.25rem;
+}
+
+.tab-btn {
+  padding: 0.5rem 1.1rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #6c757d;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-btn:hover { color: #212529; }
+.tab-btn.active { color: #0d6efd; border-bottom-color: #0d6efd; }
+
 /* Results header */
 .results-header {
   display: flex;
@@ -276,6 +299,35 @@ a:hover { text-decoration: underline; }
 .btn-map:hover { background: #dee2e6; text-decoration: none; }
 .btn-source { background: #0d6efd; color: #fff; }
 .btn-source:hover { background: #0b5ed7; text-decoration: none; }
+
+/* Place cards */
+.place-card {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+.place-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.place-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.25rem;
+}
+.stars { color: #f5a623; font-size: 0.85rem; letter-spacing: 0.05em; }
+.rating-num { font-weight: 600; font-size: 0.85rem; }
+.rating-reviews { color: #6c757d; font-size: 0.8rem; }
+
+.place-type { font-size: 0.8rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.1rem; }
+.place-hours { font-size: 0.82rem; color: #495057; }
+.place-map-link { font-size: 0.82rem; color: #0d6efd; margin-top: 0.35rem; display: inline-block; }
 
 /* Error page */
 .error-page {

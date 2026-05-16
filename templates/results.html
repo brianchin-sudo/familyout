@@ -6,62 +6,129 @@
   <a href="/" class="link-back">&#8592; New search</a>
 </div>
 
-{% if events %}
-  <p class="result-count">{{ events|length }} event{{ 's' if events|length != 1 }} found</p>
-  <div class="events-grid">
-    {% for event in events %}
-      {% set event_text = (event.title ~ ' ' ~ event.get('description', '')) | lower %}
-      {% set is_family = 'kids' in event_text or 'children' in event_text or 'family' in event_text or 'all ages' in event_text or 'toddler' in event_text %}
-      {% set cost = event.ticket_info[0].source if event.ticket_info else '' %}
-      <div class="event-card">
-        {% if event.thumbnail %}
-          <img class="event-thumb" src="{{ event.thumbnail }}" alt="{{ event.title }}">
-        {% endif %}
-        <div class="event-body">
-          <div class="event-badges">
-            {% if cost and cost | lower == 'free' %}
-              <span class="badge badge-free">Free</span>
-            {% endif %}
-            {% if is_family %}
-              <span class="badge badge-kids">Kids OK</span>
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('events', this)">
+    Events{% if events %} ({{ events|length }}{% if has_next %}+{% endif %}){% endif %}
+  </button>
+  <button class="tab-btn" onclick="showTab('places', this)">
+    Things To Do{% if places %} ({{ places|length }}){% endif %}
+  </button>
+</div>
+
+{# ── Events tab ── #}
+<div id="tab-events" class="tab-panel">
+  {% if events %}
+    <div class="events-grid">
+      {% for event in events %}
+        {% set event_text = (event.title ~ ' ' ~ event.get('description', '')) | lower %}
+        {% set is_family = 'kids' in event_text or 'children' in event_text or 'family' in event_text or 'all ages' in event_text or 'toddler' in event_text %}
+        {% set cost = event.ticket_info[0].source if event.ticket_info else '' %}
+        <div class="event-card">
+          {% if event.thumbnail %}
+            <img class="event-thumb" src="{{ event.thumbnail }}" alt="{{ event.title }}">
+          {% endif %}
+          <div class="event-body">
+            <div class="event-badges">
+              {% if cost and cost | lower == 'free' %}
+                <span class="badge badge-free">Free</span>
+              {% endif %}
+              {% if is_family %}
+                <span class="badge badge-kids">Kids OK</span>
+              {% endif %}
+            </div>
+            <h2 class="event-title">
+              <a href="{{ url_for('main.event_detail',
+                  title=event.title,
+                  link=event.link,
+                  thumbnail=event.thumbnail or '',
+                  when=event.date.when,
+                  address='||'.join(event.address),
+                  description=event.get('description', ''),
+                  cost=event.ticket_info[0].source if event.ticket_info else '',
+                  back_url=request.url) }}">{{ event.title }}</a>
+            </h2>
+            <p class="event-when">&#128197; {{ event.date.when }}</p>
+            <p class="event-venue">&#128205; {{ event.address | join(', ') }}</p>
+            {% if cost and cost | lower != 'free' %}
+              <p class="event-cost">Tickets via {{ cost }}</p>
             {% endif %}
           </div>
-          <h2 class="event-title">
-            <a href="{{ url_for('main.event_detail',
-                title=event.title,
-                link=event.link,
-                thumbnail=event.thumbnail or '',
-                when=event.date.when,
-                address='||'.join(event.address),
-                description=event.get('description', ''),
-                cost=event.ticket_info[0].source if event.ticket_info else '',
-                back_url=request.url) }}">{{ event.title }}</a>
-          </h2>
-          <p class="event-when">&#128197; {{ event.date.when }}</p>
-          <p class="event-venue">&#128205; {{ event.address | join(', ') }}</p>
-          {% if cost and cost | lower != 'free' %}
-            <p class="event-cost">Tickets via {{ cost }}</p>
-          {% endif %}
         </div>
-      </div>
-    {% endfor %}
-  </div>
+      {% endfor %}
+    </div>
 
-  <nav class="pagination">
-    {% if has_prev %}
-      <a class="btn-page" href="{{ url_for('main.search', location=location, date=date, category=category, kids_only='1' if kids_only else '', page=page-1) }}">&#8592; Previous</a>
-    {% endif %}
-    <span class="page-indicator">Page {{ page }}</span>
-    {% if has_next %}
-      <a class="btn-page" href="{{ url_for('main.search', location=location, date=date, category=category, kids_only='1' if kids_only else '', page=page+1) }}">Next &#8594;</a>
-    {% endif %}
-  </nav>
+    <nav class="pagination">
+      {% if has_prev %}
+        <a class="btn-page" href="{{ url_for('main.search', location=location, date=date, category=category, kids_only='1' if kids_only else '', page=page-1) }}">&#8592; Previous</a>
+      {% endif %}
+      <span class="page-indicator">Page {{ page }}</span>
+      {% if has_next %}
+        <a class="btn-page" href="{{ url_for('main.search', location=location, date=date, category=category, kids_only='1' if kids_only else '', page=page+1) }}">Next &#8594;</a>
+      {% endif %}
+    </nav>
 
-{% else %}
-  <div class="no-events">
-    <p>No events found near <strong>{{ location }}</strong> for your filters.</p>
-    <p>Try a different location, date range, or remove the Kids Only filter.</p>
-    <a href="/" class="btn-search">Start over</a>
-  </div>
-{% endif %}
+  {% else %}
+    <div class="no-events">
+      <p>No events found near <strong>{{ location }}</strong> for your filters.</p>
+      <p>Try a different location, date range, or remove the Kids Only filter.</p>
+      <a href="/" class="btn-search">Start over</a>
+    </div>
+  {% endif %}
+</div>
+
+{# ── Things To Do tab ── #}
+<div id="tab-places" class="tab-panel" hidden>
+  {% if places %}
+    <div class="events-grid">
+      {% for place in places %}
+        {% set map_query = place.address | urlencode if place.address else (place.title | urlencode) %}
+        <div class="place-card">
+          {% if place.thumbnail %}
+            <img class="event-thumb" src="{{ place.thumbnail }}" alt="{{ place.title }}">
+          {% endif %}
+          <div class="event-body">
+            {% if place.rating %}
+              <div class="place-rating">
+                <span class="stars">{{ '★' * (place.rating | int) }}{{ '☆' * (5 - place.rating | int) }}</span>
+                <span class="rating-num">{{ place.rating }}</span>
+                {% if place.reviews %}<span class="rating-reviews">({{ "{:,}".format(place.reviews) }})</span>{% endif %}
+              </div>
+            {% endif %}
+            <h2 class="event-title">
+              {% if place.links and place.links.website %}
+                <a href="{{ place.links.website }}" target="_blank" rel="noopener">{{ place.title }}</a>
+              {% else %}
+                <a href="https://www.google.com/maps/search/?api=1&query={{ map_query }}" target="_blank" rel="noopener">{{ place.title }}</a>
+              {% endif %}
+            </h2>
+            {% if place.type %}
+              <p class="place-type">{{ place.type }}</p>
+            {% endif %}
+            {% if place.address %}
+              <p class="event-venue">&#128205; {{ place.address }}</p>
+            {% endif %}
+            {% if place.hours %}
+              <p class="place-hours">&#128336; {{ place.hours }}</p>
+            {% endif %}
+            <a class="place-map-link" href="https://www.google.com/maps/search/?api=1&query={{ map_query }}" target="_blank" rel="noopener">View on map</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="no-events">
+      <p>No places found near <strong>{{ location }}</strong>.</p>
+      <p>Try a broader location like a nearby city.</p>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  function showTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(function(p) { p.hidden = true; });
+    document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+    document.getElementById('tab-' + name).hidden = false;
+    btn.classList.add('active');
+  }
+</script>
 {% endblock %}

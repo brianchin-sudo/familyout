@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from app.serpapi_client import search_events
-from app.filters import apply_blocklist, apply_kids_filter
+from app.serpapi_client import search_events, search_places
+from app.filters import apply_blocklist, apply_kids_filter, EVENTS_BLOCKLIST
 
 bp = Blueprint("main", __name__)
 
@@ -37,15 +37,22 @@ def search():
             page=page,
             category=category,
         )
-        events = apply_blocklist(events)
+        events = apply_blocklist(events, blocklist=EVENTS_BLOCKLIST)
         if kids_only:
             events = apply_kids_filter(events)
     except Exception:
         return render_template("error.html"), 500
 
+    # Places search is best-effort — never let its failure break the events page
+    try:
+        places = apply_blocklist(search_places(location))
+    except Exception:
+        places = []
+
     return render_template(
         "results.html",
         events=events,
+        places=places,
         location=location,
         page=page,
         has_prev=page > 1,

@@ -33,3 +33,24 @@ def search_events(location, query="family friendly", date_chip=None, page=1, cat
         return resp.json().get("events_results", [])
     except requests.RequestException:
         return []
+
+
+def search_places(location, query="family friendly things to do"):
+    api_key = os.environ.get("SERPAPI_KEY", "")
+    if not api_key:
+        return []
+
+    params = {
+        "engine": "google_local",
+        "q": query,
+        "location": location,
+        "api_key": api_key,
+    }
+
+    try:
+        resp = requests.get(SERPAPI_URL, params=params, timeout=10)
+        if resp.status_code != 200:
+            return []
+        return resp.json().get("local_results", [])
+    except requests.RequestException:
+        return []

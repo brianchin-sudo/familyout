@@ -39,3 +39,21 @@ def test_results_card_links_to_internal_detail_route(client, mock_serpapi_respon
         response = client.get("/search?location=Austin+TX")
     html = response.data.decode()
     assert 'href="/event?' in html
+
+
+def test_results_renders_place_cards(client):
+    mock_places = [
+        {"title": "Lincoln Park Zoo", "type": "Zoo", "address": "Chicago, IL",
+         "rating": 4.7, "reviews": 1200, "hours": "Open ⋅ Closes 5 PM",
+         "thumbnail": None, "links": {"website": "https://lpzoo.org"}},
+        {"title": "Millennium Park", "type": "Park", "address": "Chicago, IL",
+         "rating": 4.8, "reviews": 50000, "hours": "Open 24 hours",
+         "thumbnail": None, "links": {}},
+    ]
+    with patch("app.routes.search_events", return_value=[]):
+        with patch("app.routes.search_places", return_value=mock_places):
+            response = client.get("/search?location=Chicago+IL")
+    html = response.data.decode()
+    assert html.count('class="place-card"') == 2
+    assert b"Lincoln Park Zoo" in response.data
+    assert b"Millennium Park" in response.data
