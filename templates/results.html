@@ -70,8 +70,13 @@
   {% else %}
     <div class="no-events">
       <p>No events found near <strong>{{ location }}</strong> for your filters.</p>
-      <p>Try a different location, date range, or remove the Kids Only filter.</p>
-      <a href="/" class="btn-cta">Start over</a>
+      <p>Try adjusting your search:</p>
+      <ul>
+        <li>Use a larger nearby city (e.g. "Newark, NJ" instead of "Edison, NJ")</li>
+        <li>Try the full state name (e.g. "New Jersey" instead of "NJ")</li>
+        <li>Widen the date range or remove the Kids Only filter</li>
+      </ul>
+      <a href="/" class="btn-cta">New search</a>
     </div>
   {% endif %}
 </div>
