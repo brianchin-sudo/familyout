@@ -31,4 +31,7 @@ def create_app():
     from app.routes import bp
     app.register_blueprint(bp)
 
+    from app.filters import hires_thumb
+    app.jinja_env.filters["hires_thumb"] = hires_thumb
+
     return app

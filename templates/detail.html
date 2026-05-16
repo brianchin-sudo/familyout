@@ -8,7 +8,7 @@
 
 <div class="detail-card">
   {% if event.thumbnail %}
-    <img class="detail-thumb" src="{{ event.thumbnail }}" alt="{{ event.title }}">
+    <img class="detail-thumb" src="{{ event.thumbnail | hires_thumb }}" alt="{{ event.title }}" decoding="async">
   {% endif %}
 
   <div class="detail-meta">

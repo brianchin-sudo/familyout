@@ -29,6 +29,13 @@ def apply_kids_filter(events):
     return [e for e in events if has_family_content(e)]
 
 
+def hires_thumb(url):
+    """Strip Google's &s (small) suffix to get a higher-resolution thumbnail."""
+    if url and "encrypted-tbn" in url and url.endswith("&s"):
+        return url[:-2]
+    return url
+
+
 def is_family_friendly(event):
     text = f"{event.get('title', '')} {event.get('description', '')}".lower()
     return any(kw in text for kw in KIDS_KEYWORDS)

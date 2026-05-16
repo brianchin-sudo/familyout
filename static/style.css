@@ -318,8 +318,11 @@ main.container {
 
 .event-thumb {
   width: 100%;
-  height: 160px;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
+  object-position: center;
+  display: block;
+  background: #f0ebe5;
 }
 
 .event-body { padding: 0.85rem 1rem; flex: 1; display: flex; flex-direction: column; gap: 0.3rem; }

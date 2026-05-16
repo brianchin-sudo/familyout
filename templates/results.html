@@ -25,7 +25,7 @@
         {% set cost = event.ticket_info[0].source if event.ticket_info else '' %}
         <div class="event-card">
           {% if event.thumbnail %}
-            <img class="event-thumb" src="{{ event.thumbnail }}" alt="{{ event.title }}">
+            <img class="event-thumb" src="{{ event.thumbnail | hires_thumb }}" alt="{{ event.title }}" loading="lazy" decoding="async">
           {% endif %}
           <div class="event-body">
             <div class="event-badges">
@@ -89,7 +89,7 @@
         {% set map_query = place.address | urlencode if place.address else (place.title | urlencode) %}
         <div class="place-card">
           {% if place.thumbnail %}
-            <img class="event-thumb" src="{{ place.thumbnail }}" alt="{{ place.title }}">
+            <img class="event-thumb" src="{{ place.thumbnail | hires_thumb }}" alt="{{ place.title }}" loading="lazy" decoding="async">
           {% endif %}
           <div class="event-body">
             {% if place.rating %}
