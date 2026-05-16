@@ -1,5 +1,7 @@
 # FamilyOut
 
+**Live demo:** https://web-production-3e61e.up.railway.app/
+
 A Python/Flask web app that surfaces family-friendly events and local activities using the [SerpAPI Google Events engine](https://serpapi.com/google-events-api) and [Google Local engine](https://serpapi.com/google-local-api). Search by location and date, filter by category, toggle a "Kids Only" mode, and browse nearby family-friendly places in the Things To Do tab.
 
 ## Setup
