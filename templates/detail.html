@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{{ event.title }}{% endblock %}
+{% block content %}
+<div class="detail-header">
+  <a href="javascript:history.back()" class="link-back">&#8592; Back to results</a>
+  <h1>{{ event.title }}</h1>
+</div>
+
+<div class="detail-card">
+  {% if event.thumbnail %}
+    <img class="detail-thumb" src="{{ event.thumbnail }}" alt="{{ event.title }}">
+  {% endif %}
+
+  <div class="detail-meta">
+    <p class="event-when">&#128197; {{ event.date.when }}</p>
+    <p class="event-venue">&#128205; {{ event.address | join(', ') }}</p>
+    {% if event.ticket_info %}
+      <p class="event-cost">Tickets via {{ event.ticket_info[0].source }}</p>
+    {% endif %}
+  </div>
+
+  {% if event.description %}
+    <div class="detail-description">
+      <h2>About this event</h2>
+      <p>{{ event.description }}</p>
+    </div>
+  {% endif %}
+
+  <div class="detail-actions">
+    {% set address_query = event.address | join(', ') | urlencode %}
+    <a
+      class="btn-map"
+      href="https://www.google.com/maps/search/?api=1&query={{ address_query }}"
+      target="_blank"
+      rel="noopener"
+    >&#128205; View on Google Maps</a>
+    <a class="btn-source" href="{{ event.link }}" target="_blank" rel="noopener">
+      View Event Source &#8594;
+    </a>
+  </div>
+</div>
+{% endblock %}

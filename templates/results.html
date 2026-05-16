@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Events near {{ location }}{% endblock %}
+{% block content %}
+<div class="results-header">
+  <h1>Family Events near <em>{{ location }}</em></h1>
+  <a href="/" class="link-back">&#8592; New search</a>
+</div>
+
+{% if events %}
+  <p class="result-count">{{ events|length }} event{{ 's' if events|length != 1 }} found</p>
+  <div class="events-grid">
+    {% for event in events %}
+      {% set event_text = (event.title ~ ' ' ~ event.get('description', '')) | lower %}
+      {% set is_family = 'kids' in event_text or 'children' in event_text or 'family' in event_text or 'all ages' in event_text or 'toddler' in event_text %}
+      {% set cost = event.ticket_info[0].source if event.ticket_info else '' %}
+      <div class="event-card">
+        {% if event.thumbnail %}
+          <img class="event-thumb" src="{{ event.thumbnail }}" alt="{{ event.title }}">
+        {% endif %}
+        <div class="event-body">
+          <div class="event-badges">
+            {% if cost and cost | lower == 'free' %}
+              <span class="badge badge-free">Free</span>
+            {% endif %}
+            {% if is_family %}
+              <span class="badge badge-kids">Kids OK</span>
+            {% endif %}
+          </div>
+          <h2 class="event-title">
+            <a href="{{ event.link }}" target="_blank" rel="noopener">{{ event.title }}</a>
+          </h2>
+          <p class="event-when">&#128197; {{ event.date.when }}</p>
+          <p class="event-venue">&#128205; {{ event.address | join(', ') }}</p>
+          {% if cost and cost | lower != 'free' %}
+            <p class="event-cost">Tickets via {{ cost }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <nav class="pagination">
+    {% if has_prev %}
+      <a class="btn-page" href="{{ url_for('main.search', location=location, date=date, category=category, kids_only='1' if kids_only else '', page=page-1) }}">&#8592; Previous</a>
+    {% endif %}
+    <span class="page-indicator">Page {{ page }}</span>
+    {% if has_next %}
+      <a class="btn-page" href="{{ url_for('main.search', location=location, date=date, category=category, kids_only='1' if kids_only else '', page=page+1) }}">Next &#8594;</a>
+    {% endif %}
+  </nav>
+
+{% else %}
+  <div class="no-events">
+    <p>No events found near <strong>{{ location }}</strong> for your filters.</p>
+    <p>Try a different location, date range, or remove the Kids Only filter.</p>
+    <a href="/" class="btn-search">Start over</a>
+  </div>
+{% endif %}
+{% endblock %}

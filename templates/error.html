@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Something went wrong{% endblock %}
+{% block content %}
+<div class="error-page">
+  <h1>Something went wrong</h1>
+  <p>We couldn't load events right now. This might be a temporary issue.</p>
+  <ul>
+    <li>Try a different search location</li>
+    <li>Check back in a few minutes</li>
+  </ul>
+  <a href="/" class="btn-search">Back to search</a>
+</div>
+{% endblock %}

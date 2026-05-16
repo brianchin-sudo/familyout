@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Find Family Events{% endblock %}
+{% block content %}
+<div class="search-hero">
+  <h1>Find Family-Friendly Events Near You</h1>
+  <form class="search-form" action="/search" method="get">
+    <div class="search-row">
+      <input
+        class="input-location"
+        type="text"
+        name="location"
+        placeholder="City or ZIP code"
+        required
+        autocomplete="off"
+      >
+      <button class="btn-search" type="submit">Search</button>
+    </div>
+    <div class="filter-row">
+      <select name="date">
+        <option value="">Any date</option>
+        <option value="today">Today</option>
+        <option value="this_weekend">This weekend</option>
+        <option value="this_week">This week</option>
+        <option value="next_7_days">Next 7 days</option>
+      </select>
+      <select name="category">
+        <option value="all">All categories</option>
+        <option value="outdoor">Outdoor</option>
+        <option value="arts">Arts</option>
+        <option value="sports">Sports</option>
+        <option value="education">Education</option>
+        <option value="festivals">Festivals</option>
+      </select>
+      <label class="kids-label">
+        <input type="checkbox" name="kids_only" value="1"> Kids Only
+      </label>
+    </div>
+  </form>
+</div>
+{% endblock %}
