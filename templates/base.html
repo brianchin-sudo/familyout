@@ -4,11 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}FamilyOut{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <header class="site-header">
-    <a href="/" class="site-title">FamilyOut</a>
+    <div class="site-header-inner">
+      <svg class="site-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <div class="site-header-text">
+        <a href="/" class="site-title">Family Events Finder</a>
+        <span class="site-subtitle">Discover fun together</span>
+      </div>
+    </div>
   </header>
   <main class="container">
     {% with messages = get_flashed_messages() %}
@@ -20,5 +31,8 @@
     {% endwith %}
     {% block content %}{% endblock %}
   </main>
+  <footer class="site-footer">
+    &copy; 2026 Family Events Finder. Making memories together.
+  </footer>
 </body>
 </html>

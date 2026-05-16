@@ -2,45 +2,66 @@
 {% block title %}Find Family Events{% endblock %}
 {% block content %}
 <div class="search-hero">
-  <h1>Find family-friendly events &amp; things to do near you</h1>
-  <form class="search-form" action="/search" method="get">
-    <div class="search-row">
-      <input
-        class="input-location"
-        type="text"
-        name="location"
-        placeholder="City or ZIP code"
-        required
-        autocomplete="off"
-      >
-      <button class="btn-search" type="submit" id="btn-search">Search</button>
-    </div>
-    <div class="filter-row">
-      <select name="date">
-        <option value="">Any date</option>
-        <option value="today">Today</option>
-        <option value="this_weekend">This weekend</option>
-        <option value="this_week">This week</option>
-        <option value="next_7_days">Next 7 days</option>
-      </select>
-      <select name="category">
-        <option value="all">All categories</option>
-        <option value="outdoor">Outdoor</option>
-        <option value="arts">Arts</option>
-        <option value="sports">Sports</option>
-        <option value="education">Education</option>
-        <option value="festivals">Festivals</option>
-      </select>
-      <label class="kids-label">
-        <input type="checkbox" name="kids_only" value="1"> Kids Only
-      </label>
-    </div>
-  </form>
+  <div class="trust-badge">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    Bringing families together since 2020
+  </div>
+  <h1>Find Family-Friendly Events Near You</h1>
+  <p class="hero-sub">Discover amazing activities, workshops, and events perfect for the whole family</p>
+
+  <div class="search-card">
+    <form class="search-form" action="/search" method="get">
+      <div class="search-row">
+        <div class="input-location-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <input
+            class="input-location"
+            type="text"
+            name="location"
+            placeholder="City or ZIP code"
+            required
+            autocomplete="off"
+          >
+        </div>
+        <button class="btn-search" type="submit" id="btn-search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          Search
+        </button>
+      </div>
+      <div class="filter-row">
+        <select name="date">
+          <option value="">Any date</option>
+          <option value="today">Today</option>
+          <option value="this_weekend">This weekend</option>
+          <option value="this_week">This week</option>
+          <option value="next_7_days">Next 7 days</option>
+        </select>
+        <select name="category">
+          <option value="all">All categories</option>
+          <option value="outdoor">Outdoor</option>
+          <option value="arts">Arts</option>
+          <option value="sports">Sports</option>
+          <option value="education">Education</option>
+          <option value="festivals">Festivals</option>
+        </select>
+        <label class="kids-label">
+          <input type="checkbox" name="kids_only" value="1"> Kids Only
+        </label>
+      </div>
+    </form>
+  </div>
 </div>
 <script>
   document.querySelector('.search-form').addEventListener('submit', function () {
     var btn = document.getElementById('btn-search');
-    btn.textContent = 'Searching…';
     btn.classList.add('btn-search--loading');
     btn.disabled = true;
   });
